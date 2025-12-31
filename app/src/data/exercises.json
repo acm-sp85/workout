@@ -1,0 +1,160 @@
+{
+  "cardio_march": { 
+    "name": "March or Jog in Place", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3c3o0dHd6bTE5Y3F1bnR1ZWxtYXB1MWxncm4zeWU2ZnVlcng1ajVwNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/PSn1x0R2Hqg3kComAK/giphy.gif" 
+  },
+  "cardio_jacks": { 
+    "name": "Jumping Jacks", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdTlpaDdtbjZvbzdkdmt2c25pNnR0bHFnMDRpZzJvaWlpN2U2em1rMCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/RgtuKqJ8rPII4qdRjp/giphy.gif" 
+  },
+  "cardio_high_knees": { 
+    "name": "High Knees / Fast March", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzhhcHEzd2dtbzhlc3g1bGczZHViYzdibWJpMjdxZzZyaGk4M3N5aCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/PSn1x0R2Hqg3kComAK/giphy.gif" 
+  },
+  "cardio_mountain_climbers": {
+    "name": "Mountain Climbers",
+    "gifUrl": "https://media.giphy.com/media/ZeB4HcMpsuf7y/giphy.gif"
+  },
+  "cardio_shadow_boxing": {
+    "name": "Shadow Boxing / Fast Feet",
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3MXVuZDRsOG41OTkwYXZidXN5bnYybDhtc3JrbGtoa3YwMW1xMGF5biZlcD12MV9naWZzX3NlYXJjaCZjdD1n/m9w6aBnKE5O1isflDE/giphy.gif"
+  },
+  "mob_hip_circles": { 
+    "name": "Hip Circles", 
+    "gifUrl": "https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExNG5pbmF4ZWxkODlldTVtNTRndnBwZzNhMXk1enRkODhpeHJ0NjlucyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/X4s1TdZDGPIspTDP8c/giphy.gif" 
+  },
+  "mob_lunge_twist": { 
+    "name": "Walking Lunge + Twist", 
+    "gifUrl": "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2xmdHdqNTEzcmkwM3JrbGlrMnFydjU0Y2pwaHM5MWh2dDI1cnhrdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT8qBrjcngCsejZ0mA/giphy.gif" 
+  },
+  "mob_cat_cow": { 
+    "name": "Cat–Cow", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnU4ZjFqMmw5bWt2Z3VzazNqMTNiNXZvdXNvenhwdzNxNXFkY3FrbCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/JdtyfG3ZSE8iOlDs64/giphy.gif" 
+  },
+  "mob_arm_circles": { 
+    "name": "Arm Circles", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbzhhcHEzd2dtbzhlc3g1bGczZHViYzdibWJpMjdxZzZyaGk4M3N5aCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3kCVxtDi9cbOeW62Zf/giphy.gif" 
+  },
+  "mob_pendulum": { 
+    "name": "Shoulder Pendulum", 
+    "gifUrl": "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOWgzbHA3MWxnZGMzdjVhM3RvbTlsZzU0aHpoN3l5c3EyMHJzYjg0ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/zfXoksivZ5zeEWsswO/giphy.gif" 
+  },
+  "mob_worlds_greatest": {
+    "name": "World's Greatest Stretch",
+    "gifUrl": "https://www.mensjournal.com/.image/w_1920,q_auto:good,c_limit/MTk2MTM2Njg3NDY5Mjc0NjI5/step-3.jpg?arena_f_auto"
+  },
+  "mob_hip_openers": {
+    "name": "Hip Openers",
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3N21mcTdiajF6eWxtYnQ3ZmNkaDdweXduNGx0eDhsaHVub3kwa2R3byZlcD12MV9naWZzX3NlYXJjaCZjdD1n/eVQV01YV5BtIfhFAUY/giphy.gif"
+  },
+  "mob_torso_rotation": {
+    "name": "Standing Torso Rotations",
+    "gifUrl": "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExOTQzaDFqbWNienI5b3N0N3IxdTY0M24wZW50dTBob3VoMDVuNjhmZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/sgKj3XSrzE4ileIdxs/giphy.gif"
+  },
+  "squat_bodyweight": { 
+    "name": "Bodyweight Squats", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExanIxOXNhZHRiOTJ3ZXRyaXFpcmM2MHV4OWI2eThrdXdsdDY3eHZwYyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/RTNDA7OxcwuOMcCPhL/giphy.gif" 
+  },
+  "squat_goblet": { 
+    "name": "Goblet Squat", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExY3ZnaXVsMWlraTdjbTNuMm5uNzVzdThnZm0zdnQyaTg0ajg1eHBxYiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/MdRI2tmI5e7HX7P76U/giphy.gif" 
+  },
+  "squat_pulses": {
+    "name": "Squat Pulses",
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHA1N3Z2MGdyNnNnODhjbjVocThuazh1cGtmem1xN2g4NWtzODI2dCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/P6Q7qAdAbrlXTJ488T/giphy.gif"
+  },
+  "squat_calf_raise": {
+    "name": "Squat to Calf Raise",
+    "gifUrl": "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExandncWk0ZzlqZjdweXF6aXo5c3diNGNvN3RlNWlub29zYmk1Y3RzNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dWU9N6DdCZWxQ3WvNF/giphy.gif"
+  },
+  "lunge_reverse": { 
+    "name": "Reverse Lunges", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOGRudGFxcGp6eDNneWk2NTJkcjloMTRnZDNkbmQxcmtiNzMydmsyaCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/b58yXgYQmkv0gKqJRO/giphy.gif" 
+  },
+  "lunge_knee_drive": {
+    "name": "Step-Back Lunge + Knee Drive",
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExajJ6dnNwZGtmMGtzaDB6ZmU2cm8xY2UwMmp2aWpjMmY5ZHlueXQ4NCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/2edS6CiNmeGkM/giphy.gif"
+  },
+  "glute_bridge": { 
+    "name": "Glute Bridge", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd20yZDhwZmNncHpqanVlb3pzZWZ4ZGx0azUxdTV6NHRrMm1pNDFhNCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/krmA7YIhRvwjJYbmrG/giphy.gif" 
+  },
+  "rdl_dumbbell": {
+    "name": "Dumbbell RDL",
+    "gifUrl": "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNmMwaWpzd2ZycTBvM2ozeGI0cWMzdHQ1djR5cTNyOWN1Y3VzOGhjNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT0xenc4lKQlhf1Ohi/giphy.gif"
+  },
+  "pushup_wall": { 
+    "name": "Wall Push-Ups", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMDVya2JqanNzNTUwNGxuMGhmd2g0d3QyczA3YXViOWQ3enZlajdheCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/TxSCql3N1RYDSJmXsJ/giphy.gif" 
+  },
+  "pushup_incline": { 
+    "name": "Incline Push-Ups", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExemU0MnJuM3JtMWdybjJsNDM5bG1jeW9ycjR4ejBoaHA5ZjJ1bnNvbyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/HZqfCJII5tz7zSLq0K/giphy.gif" 
+  },
+  "row_one_arm": { 
+    "name": "One-Arm Dumbbell Row", 
+    "gifUrl": "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExa2Zpa2pwZHBndDRhaTk3cng3NjNubWFnYjAzY3p1ZjhydmU4MnBpbyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l46CurBmMVnuBTbMs/giphy.gif" 
+  },
+  "scapular_retraction": {
+    "name": "Scapular Retractions",
+    "gifUrl": "https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnozczZtMWM3aXZlb3Z6MThwZ2R1bmRta2d5YXczMDUzZnlhM3l1ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8d8BjGKJkbXeGsUEyQ/giphy.gif"
+  },
+  "bear_crawl": {
+    "name": "Bear Crawl",
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbnNxdGxkYjdydzdrcTBjaTMxZDB0bG5xdjFxY2U1b2t5aWt2cnFlciZlcD12MV9naWZzX3NlYXJjaCZjdD1n/kiPr3VnGqcydp22Shi/giphy.gif"
+  },
+  "core_dead_bug": { 
+    "name": "Dead Bug", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOXRnZXNiN2t6Ym1oMWJ3d3lkc2xleXo0eTNuc2JvMnZoNWNjY3RoNyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Rih75Cs5BrWhdJIGmu/giphy.gif" 
+  },
+  "core_plank": { 
+    "name": "Plank (Forearms)", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOTM5azZyNGVvOWoxbWk1eHV6MnFqcTFwYzRqNjBkaDRocHVtcGF6biZlcD12MV9naWZzX3NlYXJjaCZjdD1n/ZcteOOkovIh9HaVFjT/giphy.gif" 
+  },
+  "core_side_plank": {
+    "name": "Side Plank",
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExamc0amRwNGg1b3JxaHdlYWxsazU4dGRieXpzeHlkY2M2dDNsODNtNCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/du5JOJSlsqzZVk9vVl/giphy.gif"
+  },
+  "core_pallof": {
+    "name": "Pallof Press",
+    "gifUrl": "https://images.ctfassets.net/8urtyqugdt2l/6FFSoJnWj8x0nRa8nZBf58/8facb3590010111d1dd375f61c62ada4/banded-palloff-press.gif"
+  },
+  "core_hollow_hold": {
+    "name": "Hollow Body Hold",
+    "gifUrl": "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExY3U2cHRhZnQ0eW1zaWR5cnFyZ2JubDV6MWQwcTZyaGd3cTNoM2MzMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/9XbMdlJgKXXkEtC60Q/giphy.gif"
+  },
+  "core_bicycle": {
+    "name": "Bicycle Crunch (Slow)",
+    "gifUrl": "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnRxcGhtZjk0aTN0eHVhc3htdXM4Y2VwMGpiN25kbzhja3dkdzhwMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TMNCtgJGJnV8k/giphy.gif"
+  },
+  "carry_suitcase": {
+    "name": "Suitcase Carry",
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNXVzZWE0emhzdHgxem5wcDNtc3Z2bGpoenVqNXBvMmQ0Zzd4NHB4MCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/FSV7flZc38Ap2UhJ35/giphy.gif"
+  },
+  "stretch_hip_flexor": { 
+    "name": "Hip Flexor Stretch", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExdjlmMHR5bjN3Mm5za3h1a2xpcnhoaTV4MjJ3emZrMnpkMTZ3cjd1cyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/629rg7lnzlkdWP1tah/giphy.gif" 
+  },
+  "stretch_hamstring": { 
+    "name": "Hamstring Stretch", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOWJ3ZmVob3BsczczZW54dTdpbXFzam00a3praDg5b3k4NXIxemRuNSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/Y1jtM0q1PLoIVwLewI/giphy.gif" 
+  },
+  "stretch_figure4": { 
+    "name": "Figure-4 Glute Stretch", 
+    "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExODlrNXZodXpzbDk5aDNibHkyYnk5djFvMm5qNW1yZDduZDJhYTZ6cCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/g39C3qhoNvlLW8ecW0/giphy.gif" 
+  },
+  "stretch_chest": {
+    "name": "Doorway Chest Stretch",
+    "gifUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNkKu89IG6vhajLNpo7L-5vsP946AXYpyy-w&s"
+  },
+  "stretch_upper_back": { "name": "Upper Back Hug", "gifUrl": "https://media.post.rvohealth.io/wp-content/uploads/sites/2/2021/01/GRT-2.01.BearHugStretch.gif" },
+  "stretch_childs_pose": { 
+    "name": "Child's Pose", 
+    "gifUrl": "https://media.post.rvohealth.io/wp-content/uploads/sites/2/2020/07/GRT-5.6.-Childs-Pose.gif" 
+  },
+  "stretch_spinal_twist": { "name": "Spinal Twist", "gifUrl": "https://cdn.shopify.com/s/files/1/0512/9945/1076/files/FearlessUnimportantGoldeneye-size_restricted_480x480.gif?v=1638905771" },
+  "stretch_cobra": { "name": "Gentle Cobra", "gifUrl": "" },
+  "stretch_squat_hold": { "name": "Deep Squat Hold", "gifUrl": "" },
+  "breath_supine": { "name": "Deep Breathing (Supine)", "gifUrl": "" },
+  "breath_nasal": { "name": "Nasal Breathing", "gifUrl": "" }
+}
