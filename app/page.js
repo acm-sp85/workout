@@ -12,7 +12,7 @@ import {
 import SettingsModal from './src/components/SettingsModal';
 import Dashboard from './src/components/Dashboard';
 import Runner from './src/components/Runner';
-
+import QueueDrawer from './src/components/QueueDrawer';
 export default function Home() {
   // --- STATE MANAGEMENT ---
 
