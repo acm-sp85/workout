@@ -1,64 +1,53 @@
 'use client';
 import React, { useState, useEffect, useMemo } from 'react';
-import { Dumbbell, Clock, X, Settings } from 'lucide-react';
+import { Dumbbell, Clock, X, Settings, Plus } from 'lucide-react'; // Added Plus icon
 
-// 1. Import Data & Logic
-import { WORKOUT_SCHEDULE } from './src/data/schedule'; // Adjust path based on where you put the files
+// Data & Helpers
+import { WORKOUT_SCHEDULE } from '../app/src/data/schedule.js';
 import {
   formatDateKey,
   createWorkoutQueue,
   formatTime,
-} from './src/utils/helpers';
-import SettingsModal from './src/components/SettingsModal';
-import Dashboard from './src/components/Dashboard';
-import Runner from './src/components/Runner';
-import QueueDrawer from './src/components/QueueDrawer';
-export default function Home() {
-  // --- STATE MANAGEMENT ---
+} from '../app/src/utils/helpers.js';
 
-  // Persistence & Selection
+// Components
+import Dashboard from '../app/src/components/Dashboard';
+import Runner from '../app/src/components/Runner';
+import QueueDrawer from '../app/src/components/QueueDrawer';
+import SettingsModal from '../app/src/components/SettingsModal';
+import CustomLogModal from '../app/src/components/CustomLogModal'; // NEW: Custom Log Modal
+
+export default function Home() {
+  // ... (Existing State) ...
   const [workoutHistory, setWorkoutHistory] = useState({});
   const [activeDay, setActiveDay] = useState('dayA');
-  const [mode, setMode] = useState('dashboard'); // 'dashboard' | 'runner'
-
-  // Runner Logic
+  const [mode, setMode] = useState('dashboard');
   const [queue, setQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sessionTimer, setSessionTimer] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
-
-  // UI States
   const [showQueueDrawer, setShowQueueDrawer] = useState(false);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [settings, setSettings] = useState({ getReadyDuration: 5 });
 
-  // Settings State
-  const [settings, setSettings] = useState({
-    getReadyDuration: 5, // Default 5 seconds
-  });
+  // NEW: Custom Log State
+  const [showCustomLog, setShowCustomLog] = useState(false);
 
-  // --- COMPUTED VALUES ---
-  // Generate preview queue for dashboard display
+  // ... (Computed & Effects unchanged) ...
   const previewQueue = useMemo(
     () => createWorkoutQueue(WORKOUT_SCHEDULE[activeDay]),
     [activeDay]
   );
 
-  // --- EFFECTS ---
-
-  // 1. Load Data on Mount
   useEffect(() => {
     const saved = localStorage.getItem('myWorkoutDB');
     if (saved) setWorkoutHistory(JSON.parse(saved));
-
-    // Auto-select today's workout
     const today = new Date().getDay();
-    // 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
     const map = { 1: 'dayA', 2: 'dayB', 4: 'dayC', 5: 'dayD' };
     if (map[today]) setActiveDay(map[today]);
   }, []);
 
-  // 2. Session Timer Tick
   useEffect(() => {
     let interval;
     if (isTimerRunning && mode === 'runner') {
@@ -67,22 +56,56 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [isTimerRunning, mode]);
 
-  // --- HANDLERS ---
+  // --- HANDLERS (UPDATED) ---
 
-  const handlePreview = () => {
-    setIsPreviewMode(true);
-    setShowQueueDrawer(true);
+  // 1. Updated to save Object structure for Guided Workouts
+  const handleFinish = () => {
+    setIsTimerRunning(false);
+    const dateKey = formatDateKey(new Date());
+
+    // NEW: Saving object structure
+    const newEntry = {
+      type: WORKOUT_SCHEDULE[activeDay].name, // e.g., "Lower Body + Core"
+      id: activeDay,
+      duration: formatTime(sessionTimer),
+      completed: true,
+    };
+
+    const newHistory = { ...workoutHistory, [dateKey]: newEntry };
+    setWorkoutHistory(newHistory);
+    localStorage.setItem('myWorkoutDB', JSON.stringify(newHistory));
+
+    setMode('dashboard');
+    alert('Workout Saved!');
   };
 
+  // 2. NEW: Handler for Custom Logs
+  const saveCustomLog = (data) => {
+    // data.date comes in as "YYYY-MM-DD", which matches our key format exactly.
+    const dateKey = data.date;
+
+    const newEntry = {
+      type: data.type,
+      duration: `${data.duration} min`,
+      isCustom: true,
+      timestamp: new Date().toISOString(), // Optional: keeps track of when you actually logged it
+    };
+
+    // Use dateKey from input
+    const newHistory = { ...workoutHistory, [dateKey]: newEntry };
+
+    setWorkoutHistory(newHistory);
+    localStorage.setItem('myWorkoutDB', JSON.stringify(newHistory));
+
+    setShowCustomLog(false);
+    alert(`Activity logged for ${dateKey}!`);
+  };
+
+  // ... (Other handlers unchanged) ...
   const startWorkout = () => {
     const dayData = WORKOUT_SCHEDULE[activeDay];
     const newQueue = createWorkoutQueue(dayData);
-
-    if (!newQueue || newQueue.length === 0) {
-      alert('Error loading workout data. Please check data files.');
-      return;
-    }
-
+    if (!newQueue || newQueue.length === 0) return alert('Error loading data');
     setQueue(newQueue);
     setCurrentIndex(0);
     setSessionTimer(0);
@@ -91,46 +114,26 @@ export default function Home() {
     setIsPreviewMode(false);
     setMode('runner');
   };
-
-  const handleFinish = () => {
-    setIsTimerRunning(false);
-    const dateKey = formatDateKey(new Date());
-    const newHistory = { ...workoutHistory, [dateKey]: activeDay };
-
-    setWorkoutHistory(newHistory);
-    localStorage.setItem('myWorkoutDB', JSON.stringify(newHistory));
-    setMode('dashboard');
-    alert('Great job! Workout saved to history.');
+  const handleNextSlide = () =>
+    currentIndex < queue.length - 1
+      ? setCurrentIndex((c) => c + 1)
+      : handleFinish();
+  const handlePrevSlide = () =>
+    currentIndex > 0 && setCurrentIndex((c) => c - 1);
+  const handlePreview = () => {
+    setIsPreviewMode(true);
+    setShowQueueDrawer(true);
   };
-
-  const handleNextSlide = () => {
-    if (currentIndex < queue.length - 1) {
-      setCurrentIndex((c) => c + 1);
-    } else {
-      handleFinish();
-    }
-  };
-
-  const handlePrevSlide = () => {
-    if (currentIndex > 0) setCurrentIndex((c) => c - 1);
-  };
-
   const resetHistory = () => {
-    if (
-      window.confirm('Are you sure you want to delete all workout history?')
-    ) {
+    if (window.confirm('Delete history?')) {
       localStorage.removeItem('myWorkoutDB');
       setWorkoutHistory({});
     }
   };
 
-  // --- RENDER ---
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white font-sans relative">
-      {/* 1. MODALS & DRAWERS */}
-
-      {/* Queue Drawer (Used for both Preview and Active Peek) */}
+      {/* MODALS */}
       {showQueueDrawer && (
         <QueueDrawer
           queue={isPreviewMode ? previewQueue : queue}
@@ -138,8 +141,6 @@ export default function Home() {
           onClose={() => setShowQueueDrawer(false)}
         />
       )}
-
-      {/* Settings Modal */}
       {showSettings && (
         <SettingsModal
           settings={settings}
@@ -148,10 +149,17 @@ export default function Home() {
         />
       )}
 
-      {/* 2. STICKY HEADER */}
+      {/* NEW: Custom Log Modal */}
+      {showCustomLog && (
+        <CustomLogModal
+          onClose={() => setShowCustomLog(false)}
+          onSave={saveCustomLog}
+        />
+      )}
+
+      {/* HEADER */}
       <div className="bg-black/30 backdrop-blur-sm border-b border-white/10 sticky top-0 z-20">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          {/* Title Area */}
           <div className="flex items-center gap-2">
             <div
               onClick={() => setMode('dashboard')}
@@ -165,7 +173,7 @@ export default function Home() {
                   Now Training
                 </h1>
                 <p className="text-xs text-blue-300">
-                  {WORKOUT_SCHEDULE[activeDay]?.name || 'Workout'}
+                  {WORKOUT_SCHEDULE[activeDay]?.name}
                 </p>
               </div>
             ) : (
@@ -173,35 +181,37 @@ export default function Home() {
             )}
           </div>
 
-          {/* Controls Area */}
           <div className="flex items-center gap-3">
-            {/* Settings Icon (Dashboard Only) */}
             {mode === 'dashboard' && (
-              <button
-                onClick={() => setShowSettings(true)}
-                className="p-1 hover:bg-white/10 rounded-full transition-colors"
-                title="Settings"
-              >
-                <Settings className="w-5 h-5 text-white/70" />
-              </button>
+              <>
+                {/* NEW: Plus Button for logging custom workouts */}
+                <button
+                  onClick={() => setShowCustomLog(true)}
+                  className="p-1 hover:bg-white/10 rounded-full transition-colors"
+                  title="Log Activity"
+                >
+                  <Plus className="w-5 h-5 text-green-400" />
+                </button>
+                <button
+                  onClick={() => setShowSettings(true)}
+                  className="p-1 hover:bg-white/10 rounded-full transition-colors"
+                >
+                  <Settings className="w-5 h-5 text-white/70" />
+                </button>
+              </>
             )}
 
-            {/* Session Timer */}
             <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-full text-sm font-mono text-blue-300">
               <Clock className="w-4 h-4" />
               {formatTime(sessionTimer)}
             </div>
-
-            {/* Exit Button (Runner Only) */}
             {mode === 'runner' && (
               <button
                 onClick={() => {
-                  if (window.confirm('Quit workout session?')) {
-                    setIsTimerRunning(false);
-                    setMode('dashboard');
-                  }
+                  setIsTimerRunning(false);
+                  setMode('dashboard');
                 }}
-                className="p-1 hover:bg-white/10 rounded-full transition-colors"
+                className="p-1 hover:bg-white/10 rounded-full"
               >
                 <X className="w-5 h-5 text-white/50" />
               </button>
@@ -210,7 +220,6 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 3. MAIN CONTENT AREA */}
       <div className="max-w-4xl mx-auto px-4 py-6">
         {mode === 'dashboard' ? (
           <Dashboard

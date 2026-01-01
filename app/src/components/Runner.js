@@ -25,15 +25,26 @@ export default function Runner({
   const [timeLeft, setTimeLeft] = useState(0);
   const timerInterval = useRef(null);
 
+  // Audio Ref
+  const audioRef = useRef(null);
+
   // Helper to check if timed
   const isTimed = parseDuration(exercise.duration) > 0;
 
-  // 1. Reset & Auto-Start when exercise changes
+  // 1. Initialize Audio
+  useEffect(() => {
+    // A short, clean beep sound
+    audioRef.current = new Audio(
+      'https://cdn.freesound.org/previews/256/256113_3263906-lq.mp3'
+    );
+    audioRef.current.volume = 0.5;
+  }, []);
+
+  // 2. Reset & Auto-Start when exercise changes
   useEffect(() => {
     stopTimer();
 
     if (isTimed) {
-      // AUTO START LOGIC
       startTimerSequence();
     } else {
       setPhase('idle');
@@ -42,25 +53,36 @@ export default function Runner({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exercise]);
 
-  // 2. Timer Sequence Logic
-  const startTimerSequence = () => {
-    const workDuration = parseDuration(exercise.duration);
+  // 3. Audio Logic (The Fix)
+  useEffect(() => {
+    // Only play sound if we are in the 'work' phase and time is running low
+    if (phase === 'work' && timeLeft > 0 && timeLeft <= 5) {
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0;
+        audioRef.current
+          .play()
+          .catch((e) => console.log('Audio play failed', e));
+      }
+    }
+  }, [timeLeft, phase]);
 
+  // 4. Timer Sequence Logic
+  const startTimerSequence = () => {
     // Start "Get Ready" Phase
     setPhase('getReady');
-    setTimeLeft(settings.getReadyDuration); // Use value from settings
+    setTimeLeft(settings.getReadyDuration);
 
     if (timerInterval.current) clearInterval(timerInterval.current);
 
     timerInterval.current = setInterval(() => {
       setTimeLeft((prev) => {
-        if (prev <= 1) return 0; // The effect hook handles the switch at 0
+        if (prev <= 1) return 0;
         return prev - 1;
       });
     }, 1000);
   };
 
-  // 3. Watch for timer reaching 0 to switch phases
+  // 5. Watch for timer reaching 0 to switch phases
   useEffect(() => {
     if (timeLeft === 0 && timerInterval.current) {
       if (phase === 'getReady') {
@@ -98,15 +120,11 @@ export default function Runner({
   const handleStop = (e) => {
     e.stopPropagation();
     stopTimer();
-    setPhase('idle'); // "Idle" now acts as "Paused"
+    setPhase('idle');
   };
 
   const handleResume = (e) => {
     e.stopPropagation();
-    // Decide where to resume based on where we stopped?
-    // For simplicity, hitting play from idle restarts the sequence (Get Ready -> Work)
-    // To implement a true pause, we'd need to save the 'previousPhase' state.
-    // Here we will just restart the sequence for UX clarity.
     startTimerSequence();
   };
 
@@ -119,7 +137,7 @@ export default function Runner({
         />
       </div>
 
-      <div className="flex-1 bg-white/10 rounded-2xl border border-white/10 overflow-hidden flex flex-col shadow-2xl relative">
+      <div className="flex-1 bg-white/10 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden flex flex-col shadow-2xl relative">
         <div className="p-4 bg-black/20 border-b border-white/5 flex justify-between items-center z-10 relative">
           <div className="flex items-center gap-2">
             <span
@@ -156,7 +174,9 @@ export default function Runner({
             <img
               src={exercise.gifUrl}
               alt={exercise.name}
-              className={`w-full h-full object-cover transition-all duration-500 ${phase !== 'idle' ? 'scale-105 opacity-50' : ''}`}
+              className={`w-full h-full object-cover transition-all duration-700 ${
+                phase !== 'idle' ? 'scale-110' : ''
+              }`}
               onError={(e) => {
                 e.target.src =
                   'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23334155" width="400" height="300"/%3E%3Ctext fill="%23cbd5e1" font-family="system-ui" font-size="18" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3EImage not found%3C/text%3E%3C/svg%3E';
@@ -168,11 +188,15 @@ export default function Runner({
 
           {/* TIMER OVERLAY */}
           {isTimed && (
-            <div className="absolute inset-0 flex items-center justify-center z-20">
+            <div
+              className={`absolute inset-0 flex items-center justify-center z-20 transition-colors duration-300 ${
+                phase !== 'idle' ? 'bg-black/40' : ''
+              }`}
+            >
               {/* IDLE (PAUSED) STATE */}
               {phase === 'idle' && (
                 <div className="text-center animate-in zoom-in">
-                  <p className="text-white/60 font-bold uppercase tracking-widest text-sm mb-4">
+                  <p className="text-white/60 font-bold uppercase tracking-widest text-sm mb-4 drop-shadow-md">
                     Paused
                   </p>
                   <button
@@ -187,15 +211,15 @@ export default function Runner({
               {/* GET READY STATE */}
               {phase === 'getReady' && (
                 <div className="text-center animate-in zoom-in">
-                  <p className="text-orange-400 font-bold uppercase tracking-widest text-lg mb-2">
+                  <p className="text-orange-400 font-bold uppercase tracking-widest text-lg mb-2 drop-shadow-md">
                     Get Ready
                   </p>
-                  <div className="text-8xl font-black text-white drop-shadow-lg tabular-nums">
+                  <div className="text-8xl font-black text-white drop-shadow-xl tabular-nums">
                     {timeLeft}
                   </div>
                   <button
                     onClick={handleStop}
-                    className="mt-8 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm font-medium flex items-center gap-2 mx-auto"
+                    className="mt-8 px-4 py-2 bg-black/50 hover:bg-black/70 rounded-full text-sm font-medium flex items-center gap-2 mx-auto backdrop-blur-md border border-white/10"
                   >
                     <RotateCcw className="w-4 h-4" /> Pause
                   </button>
@@ -205,15 +229,15 @@ export default function Runner({
               {/* WORK STATE */}
               {phase === 'work' && (
                 <div className="text-center animate-in zoom-in">
-                  <p className="text-green-400 font-bold uppercase tracking-widest text-lg mb-2">
+                  <p className="text-green-400 font-bold uppercase tracking-widest text-lg mb-2 drop-shadow-md">
                     Work
                   </p>
-                  <div className="text-8xl font-black text-white drop-shadow-lg tabular-nums">
+                  <div className="text-8xl font-black text-white drop-shadow-xl tabular-nums">
                     {timeLeft}
                   </div>
                   <button
                     onClick={handleStop}
-                    className="mt-4 px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full text-sm font-medium flex items-center gap-2 mx-auto"
+                    className="mt-4 px-4 py-2 bg-black/50 hover:bg-black/70 rounded-full text-sm font-medium flex items-center gap-2 mx-auto backdrop-blur-md border border-white/10"
                   >
                     <RotateCcw className="w-4 h-4" /> Stop
                   </button>
@@ -223,8 +247,10 @@ export default function Runner({
               {/* FINISHED STATE */}
               {phase === 'finished' && (
                 <div className="text-center animate-in zoom-in">
-                  <CheckCircle2 className="w-24 h-24 text-green-500 mx-auto mb-4" />
-                  <p className="text-2xl font-bold text-white">Done!</p>
+                  <CheckCircle2 className="w-24 h-24 text-green-500 mx-auto mb-4 drop-shadow-lg" />
+                  <p className="text-2xl font-bold text-white drop-shadow-md">
+                    Done!
+                  </p>
                   <button
                     onClick={handleResume}
                     className="mt-4 text-white/50 hover:text-white text-sm flex items-center gap-1 mx-auto"

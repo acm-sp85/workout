@@ -153,8 +153,8 @@
     "gifUrl": "https://media.post.rvohealth.io/wp-content/uploads/sites/2/2020/07/GRT-5.6.-Childs-Pose.gif" 
   },
   "stretch_spinal_twist": { "name": "Spinal Twist", "gifUrl": "https://cdn.shopify.com/s/files/1/0512/9945/1076/files/FearlessUnimportantGoldeneye-size_restricted_480x480.gif?v=1638905771" },
-  "stretch_cobra": { "name": "Gentle Cobra", "gifUrl": "" },
-  "stretch_squat_hold": { "name": "Deep Squat Hold", "gifUrl": "" },
-  "breath_supine": { "name": "Deep Breathing (Supine)", "gifUrl": "" },
-  "breath_nasal": { "name": "Nasal Breathing", "gifUrl": "" }
+  "stretch_cobra": { "name": "Gentle Cobra", "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2NrNnI1bjB6ZWthN2Q0YjYxNmk2ajZnN3Blbmw2ZmU5aGt6bm1hcCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/rhubFo6D3rKw5dKPY9/giphy.gif" },
+  "stretch_squat_hold": { "name": "Deep Squat Hold", "gifUrl": "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3YmhzcTczMmtxeDNveXJkZ3Q4azV3c3hybHdkaDdrbXRmMXViejc0ZSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/RTNDA7OxcwuOMcCPhL/giphy.gif" },
+  "breath_supine": { "name": "Deep Breathing (Supine)", "gifUrl": "https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3MnVvdzdzOGVkajhmbG05Z2Fzajljd21kdm11ZDQxeXJ1YmxteTZmMCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/F1yNvyE1FvDTzLVBIw/giphy.gif" },
+  "breath_nasal": { "name": "Nasal Breathing", "gifUrl": "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExbTA1MjhvMWc3OWZzZTU3ZG5pdGNmbjNrYXExb2hvOWozeHp4MzZoOSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/1FMaabePDEfgk/giphy.gif" }
 }
