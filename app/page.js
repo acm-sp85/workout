@@ -1,251 +1,226 @@
 'use client';
-import React, { useState, useEffect, useMemo } from 'react';
-import { Dumbbell, Clock, X, Settings, Plus } from 'lucide-react'; // Added Plus icon
-
-// Data & Helpers
-import { WORKOUT_SCHEDULE } from '../app/src/data/schedule.js';
+import React, { useState, useEffect } from 'react';
 import {
-  formatDateKey,
-  createWorkoutQueue,
-  formatTime,
-} from '../app/src/utils/helpers.js';
+  LayoutDashboard,
+  Dumbbell,
+  ClipboardEdit,
+  Calendar as CalIcon,
+  CheckCircle2,
+  Flame,
+  Droplets,
+  Leaf,
+} from 'lucide-react';
 
-// Components
-import Dashboard from '../app/src/components/Dashboard';
-import Runner from '../app/src/components/Runner';
-import QueueDrawer from '../app/src/components/QueueDrawer';
-import SettingsModal from '../app/src/components/SettingsModal';
-import CustomLogModal from '../app/src/components/CustomLogModal'; // NEW: Custom Log Modal
+// --- IMPORTS ---
+import WorkoutModule from './src/components/WorkoutModule'; // Your previous 'Home' code
+import DailyLogger from './src/components/DailyLogger'; // The new code above
+import { formatDateKey } from './src/utils/helpers'; // Reuse your helper
 
-export default function Home() {
-  // ... (Existing State) ...
-  const [workoutHistory, setWorkoutHistory] = useState({});
-  const [activeDay, setActiveDay] = useState('dayA');
-  const [mode, setMode] = useState('dashboard');
-  const [queue, setQueue] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [sessionTimer, setSessionTimer] = useState(0);
-  const [isTimerRunning, setIsTimerRunning] = useState(false);
-  const [showQueueDrawer, setShowQueueDrawer] = useState(false);
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-  const [settings, setSettings] = useState({ getReadyDuration: 5 });
+export default function AccountabilityApp() {
+  const [activeTab, setActiveTab] = useState('home'); // 'home' | 'workout' | 'log'
+  const [db, setDb] = useState({});
 
-  // NEW: Custom Log State
-  const [showCustomLog, setShowCustomLog] = useState(false);
+  // Date Key for Today
+  const todayKey = formatDateKey(new Date());
 
-  // ... (Computed & Effects unchanged) ...
-  const previewQueue = useMemo(
-    () => createWorkoutQueue(WORKOUT_SCHEDULE[activeDay]),
-    [activeDay]
-  );
-
+  // Load DB
   useEffect(() => {
-    const saved = localStorage.getItem('myWorkoutDB');
-    if (saved) setWorkoutHistory(JSON.parse(saved));
-    const today = new Date().getDay();
-    const map = { 1: 'dayA', 2: 'dayB', 4: 'dayC', 5: 'dayD' };
-    if (map[today]) setActiveDay(map[today]);
+    const saved = localStorage.getItem('accountabilityDB');
+    if (saved) setDb(JSON.parse(saved));
   }, []);
 
-  useEffect(() => {
-    let interval;
-    if (isTimerRunning && mode === 'runner') {
-      interval = setInterval(() => setSessionTimer((s) => s + 1), 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isTimerRunning, mode]);
-
-  // --- HANDLERS (UPDATED) ---
-
-  // 1. Updated to save Object structure for Guided Workouts
-  const handleFinish = () => {
-    setIsTimerRunning(false);
-    const dateKey = formatDateKey(new Date());
-
-    // NEW: Saving object structure
-    const newEntry = {
-      type: WORKOUT_SCHEDULE[activeDay].name, // e.g., "Lower Body + Core"
-      id: activeDay,
-      duration: formatTime(sessionTimer),
-      completed: true,
+  // Save Function (Merges new data with existing day data)
+  const saveEntry = (key, data) => {
+    const newDb = {
+      ...db,
+      [key]: {
+        ...(db[key] || {}), // Keep existing data (like workout if logged separately)
+        ...data,
+      },
     };
-
-    const newHistory = { ...workoutHistory, [dateKey]: newEntry };
-    setWorkoutHistory(newHistory);
-    localStorage.setItem('myWorkoutDB', JSON.stringify(newHistory));
-
-    setMode('dashboard');
-    alert('Workout Saved!');
+    setDb(newDb);
+    localStorage.setItem('accountabilityDB', JSON.stringify(newDb));
   };
 
-  // 2. NEW: Handler for Custom Logs
-  const saveCustomLog = (data) => {
-    // data.date comes in as "YYYY-MM-DD", which matches our key format exactly.
-    const dateKey = data.date;
-
-    const newEntry = {
-      type: data.type,
-      duration: `${data.duration} min`,
-      isCustom: true,
-      timestamp: new Date().toISOString(), // Optional: keeps track of when you actually logged it
-    };
-
-    // Use dateKey from input
-    const newHistory = { ...workoutHistory, [dateKey]: newEntry };
-
-    setWorkoutHistory(newHistory);
-    localStorage.setItem('myWorkoutDB', JSON.stringify(newHistory));
-
-    setShowCustomLog(false);
-    alert(`Activity logged for ${dateKey}!`);
+  // Workout Completion Wrapper
+  const handleWorkoutComplete = (workoutType, details) => {
+    saveEntry(todayKey, {
+      workout: { type: workoutType, details, completed: true },
+    });
+    alert('Workout Logged to Accountability Tracker!');
+    setActiveTab('home');
   };
 
-  // ... (Other handlers unchanged) ...
-  const startWorkout = () => {
-    const dayData = WORKOUT_SCHEDULE[activeDay];
-    const newQueue = createWorkoutQueue(dayData);
-    if (!newQueue || newQueue.length === 0) return alert('Error loading data');
-    setQueue(newQueue);
-    setCurrentIndex(0);
-    setSessionTimer(0);
-    setIsTimerRunning(true);
-    setShowQueueDrawer(false);
-    setIsPreviewMode(false);
-    setMode('runner');
+  // Daily Log Completion Wrapper
+  const handleLogComplete = (logData) => {
+    saveEntry(todayKey, { ...logData, logCompleted: true });
+    alert('Daily Log Saved!');
+    setActiveTab('home');
   };
-  const handleNextSlide = () =>
-    currentIndex < queue.length - 1
-      ? setCurrentIndex((c) => c + 1)
-      : handleFinish();
-  const handlePrevSlide = () =>
-    currentIndex > 0 && setCurrentIndex((c) => c - 1);
-  const handlePreview = () => {
-    setIsPreviewMode(true);
-    setShowQueueDrawer(true);
-  };
-  const resetHistory = () => {
-    if (window.confirm('Delete history?')) {
-      localStorage.removeItem('myWorkoutDB');
-      setWorkoutHistory({});
-    }
+
+  // --- TABS CONTENT ---
+
+  const renderHome = () => {
+    const today = db[todayKey] || {};
+
+    return (
+      <div className="space-y-6 pb-24">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-3xl shadow-lg mb-6">
+          <h1 className="text-2xl font-bold mb-1">Hey there Alex!</h1>
+          <p className="text-blue-100 text-sm">Let's crush your goals today.</p>
+        </div>
+
+        {/* Status Grid */}
+        <div className="grid grid-cols-2 gap-4">
+          {/* Workout Card */}
+          <div
+            onClick={() => setActiveTab('workout')}
+            className={`p-4 rounded-2xl border cursor-pointer transition-all ${today.workout ? 'bg-green-500/20 border-green-500' : 'bg-white/5 border-white/10 hover:bg-white/10'}`}
+          >
+            <div className="flex justify-between items-start mb-2">
+              <Dumbbell
+                className={`w-6 h-6 ${today.workout ? 'text-green-400' : 'text-white/50'}`}
+              />
+              {today.workout && (
+                <CheckCircle2 className="w-5 h-5 text-green-400" />
+              )}
+            </div>
+            <p className="font-bold text-lg">
+              {today.workout ? 'Trained' : 'Workout'}
+            </p>
+            <p className="text-xs opacity-60">
+              {today.workout ? today.workout.type : 'Tap to start'}
+            </p>
+          </div>
+
+          {/* Daily Log Card */}
+          <div
+            onClick={() => setActiveTab('log')}
+            className={`p-4 rounded-2xl border cursor-pointer transition-all ${today.logCompleted ? 'bg-blue-500/20 border-blue-500' : 'bg-white/5 border-white/10 hover:bg-white/10'}`}
+          >
+            <div className="flex justify-between items-start mb-2">
+              <ClipboardEdit
+                className={`w-6 h-6 ${today.logCompleted ? 'text-blue-400' : 'text-white/50'}`}
+              />
+              {today.logCompleted && (
+                <CheckCircle2 className="w-5 h-5 text-blue-400" />
+              )}
+            </div>
+            <p className="font-bold text-lg">Daily Log</p>
+            <p className="text-xs opacity-60">
+              {today.logCompleted ? 'Completed' : 'Tap to log'}
+            </p>
+          </div>
+        </div>
+
+        {/* Quick Stats Summary (If logged) */}
+        {today.logCompleted && (
+          <div className="bg-black/20 rounded-2xl p-5 border border-white/5">
+            <h3 className="font-bold text-white/70 mb-4 uppercase tracking-wider text-xs">
+              Today's Nutrition
+            </h3>
+            <div className="grid grid-cols-4 gap-2 text-center">
+              <div>
+                <div className="w-10 h-10 mx-auto bg-green-500/20 rounded-full flex items-center justify-center mb-1">
+                  <Leaf className="w-5 h-5 text-green-400" />
+                </div>
+                <span className="text-xs font-bold">{today.plants}</span>
+              </div>
+              <div>
+                <div className="w-10 h-10 mx-auto bg-yellow-500/20 rounded-full flex items-center justify-center mb-1">
+                  <Flame className="w-5 h-5 text-yellow-400" />
+                </div>
+                <span className="text-xs font-bold">{today.fasting}h</span>
+              </div>
+              <div>
+                <div
+                  className={`w-10 h-10 mx-auto rounded-full flex items-center justify-center mb-1 ${!today.upf ? 'bg-green-500/20' : 'bg-red-500/20'}`}
+                >
+                  {!today.upf ? (
+                    <CheckCircle2 className="w-5 h-5 text-green-400" />
+                  ) : (
+                    <CheckCircle2 className="w-5 h-5 text-red-400" />
+                  )}
+                </div>
+                <span className="text-xs font-bold">UPF</span>
+              </div>
+              <div>
+                <div className="w-10 h-10 mx-auto bg-purple-500/20 rounded-full flex items-center justify-center mb-1">
+                  <Droplets className="w-5 h-5 text-purple-400" />
+                </div>
+                <span className="text-xs font-bold">{today.drinks}</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white font-sans relative">
-      {/* MODALS */}
-      {showQueueDrawer && (
-        <QueueDrawer
-          queue={isPreviewMode ? previewQueue : queue}
-          currentIndex={isPreviewMode ? -1 : currentIndex}
-          onClose={() => setShowQueueDrawer(false)}
-        />
-      )}
-      {showSettings && (
-        <SettingsModal
-          settings={settings}
-          onUpdate={setSettings}
-          onClose={() => setShowSettings(false)}
-        />
-      )}
+    <div className="min-h-screen bg-slate-950 text-white font-sans">
+      {/* MAIN CONTENT AREA */}
+      <div className="max-w-md mx-auto min-h-screen relative">
+        <div className="p-4 pt-6">
+          {activeTab === 'home' && renderHome()}
 
-      {/* NEW: Custom Log Modal */}
-      {showCustomLog && (
-        <CustomLogModal
-          onClose={() => setShowCustomLog(false)}
-          onSave={saveCustomLog}
-        />
-      )}
-
-      {/* HEADER */}
-      <div className="bg-black/30 backdrop-blur-sm border-b border-white/10 sticky top-0 z-20">
-        <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div
-              onClick={() => setMode('dashboard')}
-              className="cursor-pointer"
-            >
-              <Dumbbell className="w-6 h-6 text-blue-400" />
-            </div>
-            {mode === 'runner' ? (
-              <div>
-                <h1 className="text-sm font-bold text-white/80">
-                  Now Training
-                </h1>
-                <p className="text-xs text-blue-300">
-                  {WORKOUT_SCHEDULE[activeDay]?.name}
-                </p>
-              </div>
-            ) : (
-              <h1 className="text-lg font-bold">Weekly Plan</h1>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3">
-            {mode === 'dashboard' && (
-              <>
-                {/* NEW: Plus Button for logging custom workouts */}
-                <button
-                  onClick={() => setShowCustomLog(true)}
-                  className="p-1 hover:bg-white/10 rounded-full transition-colors"
-                  title="Log Activity"
-                >
-                  <Plus className="w-5 h-5 text-green-400" />
-                </button>
-                <button
-                  onClick={() => setShowSettings(true)}
-                  className="p-1 hover:bg-white/10 rounded-full transition-colors"
-                >
-                  <Settings className="w-5 h-5 text-white/70" />
-                </button>
-              </>
-            )}
-
-            <div className="flex items-center gap-1.5 bg-white/10 px-3 py-1 rounded-full text-sm font-mono text-blue-300">
-              <Clock className="w-4 h-4" />
-              {formatTime(sessionTimer)}
-            </div>
-            {mode === 'runner' && (
-              <button
-                onClick={() => {
-                  setIsTimerRunning(false);
-                  setMode('dashboard');
-                }}
-                className="p-1 hover:bg-white/10 rounded-full"
-              >
-                <X className="w-5 h-5 text-white/50" />
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-4xl mx-auto px-4 py-6">
-        {mode === 'dashboard' ? (
-          <Dashboard
-            schedule={WORKOUT_SCHEDULE}
-            activeDay={activeDay}
-            setActiveDay={setActiveDay}
-            onStart={startWorkout}
-            onPreview={handlePreview}
-            history={workoutHistory}
-            queueLength={previewQueue ? previewQueue.length : 0}
-            onResetHistory={resetHistory}
-          />
-        ) : (
-          <div className="h-[calc(100vh-140px)] flex flex-col justify-center relative">
-            <Runner
-              exercise={queue[currentIndex]}
-              progress={((currentIndex + 1) / queue.length) * 100}
-              isLast={currentIndex === queue.length - 1}
-              onNext={handleNextSlide}
-              onPrev={handlePrevSlide}
-              onPeek={() => {
-                setIsPreviewMode(false);
-                setShowQueueDrawer(true);
-              }}
-              settings={settings}
+          {activeTab === 'workout' && (
+            // You need to slightly modify your WorkoutModule to accept an onFinish prop instead of saving to LS directly,
+            // OR just let it save to LS and we assume sync happens on reload.
+            // Better: Pass a "onComplete" handler.
+            <WorkoutModule
+              onExit={() => setActiveTab('home')}
+              externalSave={handleWorkoutComplete}
             />
+          )}
+
+          {activeTab === 'log' && (
+            <div>
+              <div className="flex items-center gap-3 mb-6">
+                <button
+                  onClick={() => setActiveTab('home')}
+                  className="p-2 hover:bg-white/10 rounded-full"
+                >
+                  <ClipboardEdit className="w-6 h-6 text-white/50" />
+                </button>
+                <h2 className="text-xl font-bold">Daily Logger</h2>
+              </div>
+              <DailyLogger
+                dateKey={todayKey}
+                initialData={db[todayKey] || {}}
+                onSave={handleLogComplete}
+              />
+            </div>
+          )}
+        </div>
+
+        {/* BOTTOM NAVIGATION (Only on Home) */}
+        {activeTab === 'home' && (
+          <div className="fixed bottom-0 left-0 right-0 bg-black/80 backdrop-blur-lg border-t border-white/10 p-4 pb-8 z-50">
+            <div className="max-w-md mx-auto flex justify-around items-center">
+              <button
+                onClick={() => setActiveTab('home')}
+                className="flex flex-col items-center gap-1 text-blue-400"
+              >
+                <LayoutDashboard className="w-6 h-6" />
+                <span className="text-[10px] font-bold">Today</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('workout')}
+                className="flex flex-col items-center gap-1 text-white/50 hover:text-white"
+              >
+                <Dumbbell className="w-6 h-6" />
+                <span className="text-[10px] font-bold">Gym</span>
+              </button>
+              <button
+                onClick={() => setActiveTab('log')}
+                className="flex flex-col items-center gap-1 text-white/50 hover:text-white"
+              >
+                <ClipboardEdit className="w-6 h-6" />
+                <span className="text-[10px] font-bold">Log</span>
+              </button>
+            </div>
           </div>
         )}
       </div>

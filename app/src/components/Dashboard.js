@@ -13,9 +13,9 @@ export default function Dashboard({
   onResetHistory,
 }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
       {/* Left Col: Selector & Info */}
-      <div className="md:col-span-2 space-y-6">
+      <div className="lg:col-span-2 space-y-6">
         <div>
           <h2 className="text-xs font-bold text-white/50 mb-3 tracking-widest uppercase">
             Select Workout
@@ -47,30 +47,33 @@ export default function Dashboard({
             ))}
           </div>
         </div>
-
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center">
           <h3 className="text-xl font-bold mb-2">Ready to train?</h3>
           <p className="text-white/60 mb-6 text-sm">
             {queueLength} exercises queued up.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={onPreview}
-              className="w-full sm:w-auto px-6 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-full border border-white/10 transition-all flex items-center justify-center gap-2"
-            >
-              <Eye className="w-5 h-5" />
-              Preview
-            </button>
+
+          {/* Container: Always vertical (flex-col) */}
+          <div className="flex flex-col items-center justify-center gap-3 w-full">
+            {/* Start Button (Moved to top as it's the primary action, usually better UX) */}
             <button
               onClick={onStart}
-              className="w-full sm:w-auto px-12 py-4 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full shadow-xl shadow-blue-500/20 transform hover:scale-105 transition-all flex items-center justify-center gap-2"
+              className="w-full px-12 py-4 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-full shadow-xl shadow-blue-500/20 transform hover:scale-105 transition-all flex items-center justify-center gap-2"
             >
               <Play className="w-5 h-5 fill-current" />
               START WORKOUT
             </button>
+
+            {/* Preview Button */}
+            <button
+              onClick={onPreview}
+              className="w-full px-6 py-4 bg-white/10 hover:bg-white/20 text-white font-bold rounded-full border border-white/10 transition-all flex items-center justify-center gap-2"
+            >
+              <Eye className="w-5 h-5" />
+              Preview
+            </button>
           </div>
         </div>
-
         <div className="bg-purple-900/20 border border-purple-500/20 rounded-xl p-4 flex gap-4 items-start">
           <div className="p-2 bg-purple-500/20 rounded-lg shrink-0">
             <TrendingUp className="w-5 h-5 text-purple-400" />
