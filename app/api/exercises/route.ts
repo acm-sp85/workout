@@ -6,7 +6,7 @@ export async function GET() {
   await dbConnect();
 
   try {
-    const exercises = await Exercise.find({});
+    const exercises = await Exercise.find({} as any);
     
     // Convert array to object map keyed by slug
     const exercisesMap = exercises.reduce((acc, exercise) => {

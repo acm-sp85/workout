@@ -21,12 +21,6 @@ const LogSchema = new mongoose.Schema({
   },
 
   updatedAt: { type: Date, default: Date.now },
-});
-
-// Update the `updatedAt` field on save
-LogSchema.pre('save', function(next) {
-  this.updatedAt = new Date();
-  next();
-});
+}, { timestamps: true });
 
 export default mongoose.models.Log || mongoose.model('Log', LogSchema);

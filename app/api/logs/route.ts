@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   try {
     // Optional: Filter by specific date or range if params provided
     // For now, we return all logs to populate the app state
-    const logs = await Log.find({});
+    const logs = await Log.find({} as any);
     
     // Convert array to object map keyed by dateKey
     const logsMap = logs.reduce((acc, log) => {
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
 
     // Upsert: Update if exists, Create if not
     const log = await Log.findOneAndUpdate(
-      { dateKey },
+      { dateKey } as any,
       { $set: { ...data, dateKey } },
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
