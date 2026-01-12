@@ -128,7 +128,7 @@ export default function WorkoutApp() {
               >
                 <X className="w-5 h-5 text-white/50" />
               </button>
-            )}
+            )}x
           </div>
         </div>
       </div>

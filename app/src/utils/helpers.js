@@ -1,5 +1,3 @@
-import EXERCISE_DB from '../data/exercises.json';
-
 // --- DATE HELPERS ---
 
 export const formatDateKey = (date) => {
@@ -41,11 +39,11 @@ export const parseDuration = (str) => {
 
 // --- QUEUE BUILDER ---
 // Merges the Schedule Item (Reps/Duration) with the DB Data (Name/GIF)
-export const createWorkoutQueue = (daySchedule) => {
+export const createWorkoutQueue = (daySchedule, exerciseDB) => {
   let queue = [];
 
   const mergeData = (item, type, round = 0, totalRounds = 0) => {
-    const dbData = EXERCISE_DB[item.id];
+    const dbData = exerciseDB[item.id];
 
     if (!dbData) {
       console.warn(`Exercise ID not found in DB: ${item.id}`);

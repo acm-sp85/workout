@@ -26,6 +26,8 @@ export default function WorkoutModule({ onExit, externalSave }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [sessionTimer, setSessionTimer] = useState(0);
   const [isTimerRunning, setIsTimerRunning] = useState(false);
+  const [exerciseDB, setExerciseDB] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
   // UI States
   const [showQueueDrawer, setShowQueueDrawer] = useState(false);
@@ -37,8 +39,11 @@ export default function WorkoutModule({ onExit, externalSave }) {
 
   // --- COMPUTED ---
   const previewQueue = useMemo(
-    () => createWorkoutQueue(WORKOUT_SCHEDULE[activeDay]),
-    [activeDay]
+    () => {
+      if (!exerciseDB || Object.keys(exerciseDB).length === 0) return [];
+      return createWorkoutQueue(WORKOUT_SCHEDULE[activeDay], exerciseDB);
+    },
+    [activeDay, exerciseDB]
   );
 
   // --- EFFECTS ---
@@ -48,6 +53,23 @@ export default function WorkoutModule({ onExit, externalSave }) {
     const today = new Date().getDay();
     const map = { 1: 'dayA', 2: 'dayB', 4: 'dayC', 5: 'dayD' };
     if (map[today]) setActiveDay(map[today]);
+
+    // Fetch Exercise DB
+    const fetchExercises = async () => {
+      try {
+        const res = await fetch('/api/exercises');
+        if (!res.ok) throw new Error('Failed to fetch exercises');
+        const data = await res.json();
+        setExerciseDB(data);
+      } catch (err) {
+        console.error(err);
+        alert('Failed to load exercise data. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchExercises();
   }, []);
 
   useEffect(() => {
@@ -66,9 +88,9 @@ export default function WorkoutModule({ onExit, externalSave }) {
 
   const startWorkout = () => {
     const dayData = WORKOUT_SCHEDULE[activeDay];
-    const newQueue = createWorkoutQueue(dayData);
+    const newQueue = createWorkoutQueue(dayData, exerciseDB);
     if (!newQueue || newQueue.length === 0)
-      return alert('Error loading workout data.');
+      return alert('Error loading workout data or connection issue.');
     setQueue(newQueue);
     setCurrentIndex(0);
     setSessionTimer(0);
@@ -131,6 +153,14 @@ export default function WorkoutModule({ onExit, externalSave }) {
       setWorkoutHistory({});
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-96 flex items-center justify-center bg-slate-900 text-white rounded-3xl border border-white/10">
+        <Dumbbell className="w-10 h-10 animate-spin text-blue-500" />
+      </div>
+    );
+  }
 
   // --- RENDER ---
   return (

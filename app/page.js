@@ -13,6 +13,7 @@ import {
 
 // --- IMPORTS ---
 import WorkoutModule from './src/components/WorkoutModule'; // Your previous 'Home' code
+import WorkoutCalendar from './src/components/WorkoutCalendar';
 import DailyLogger from './src/components/DailyLogger'; // The new code above
 import { formatDateKey } from './src/utils/helpers'; // Reuse your helper
 
@@ -25,21 +26,44 @@ export default function AccountabilityApp() {
 
   // Load DB
   useEffect(() => {
-    const saved = localStorage.getItem('accountabilityDB');
-    if (saved) setDb(JSON.parse(saved));
+    // 1. Fetch from API
+    const fetchLogs = async () => {
+      try {
+        const res = await fetch('/api/logs');
+        if (res.ok) {
+          const data = await res.json();
+          setDb(data);
+        }
+      } catch (err) {
+        console.error('Failed to fetch logs:', err);
+      }
+    };
+    fetchLogs();
   }, []);
 
-  // Save Function (Merges new data with existing day data)
-  const saveEntry = (key, data) => {
+  // Save Function (Persist to DB)
+  const saveEntry = async (key, data) => {
+    // Optimistic Update
     const newDb = {
       ...db,
       [key]: {
-        ...(db[key] || {}), // Keep existing data (like workout if logged separately)
+        ...(db[key] || {}),
         ...data,
       },
     };
     setDb(newDb);
-    localStorage.setItem('accountabilityDB', JSON.stringify(newDb));
+
+    // Persist
+    try {
+      await fetch('/api/logs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dateKey: key, ...data }),
+      });
+    } catch (err) {
+      console.error('Failed to save log:', err);
+      alert('Failed to save to database. Please check your connection.');
+    }
   };
 
   // Workout Completion Wrapper
@@ -193,6 +217,9 @@ export default function AccountabilityApp() {
               />
             </div>
           )}
+        </div>
+        <div>
+            <WorkoutCalendar history={db} />
         </div>
 
         {/* BOTTOM NAVIGATION (Only on Home) */}
